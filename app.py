@@ -8,9 +8,9 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# ---------- CONTACT INFO (EDIT WITH YOUR REAL DETAILS) ----------
-PHONE = "+509 1234 5678"          # <-- Replace with your actual phone number
-EMAIL = "gesner@example.com"      # <-- Replace with your actual email
+# ---------- YOUR CONTACT INFO ----------
+PHONE = "(509)-47385663"
+EMAIL = "deslandes78@gmail.com"
 
 # ---------- CUSTOM HTML/CSS/JS FOR SPINNING TEXT & FALLING STARS ----------
 st.markdown(f"""
@@ -133,6 +133,6 @@ st.markdown(f"""
 </script>
 """, unsafe_allow_html=True)
 
-# Optional: footer note
+# Optional footer note
 st.markdown("---")
 st.caption("✨ Built with Streamlit • Deployed on Streamlit Cloud • Stars keep falling ✨")
