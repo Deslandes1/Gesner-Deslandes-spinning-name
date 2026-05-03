@@ -11,10 +11,9 @@ st.set_page_config(
 PHONE = "(509)-47385663"
 EMAIL = "deslandes78@gmail.com"
 
-# Using components.html for a more stable Canvas execution
+# Hide Streamlit UI and style the contact bar
 st.markdown(f"""
 <style>
-    /* Hide Streamlit UI elements for a clean 'Universe' look */
     #MainMenu {{visibility: hidden;}}
     footer {{visibility: hidden;}}
     header {{visibility: hidden;}}
@@ -26,7 +25,7 @@ st.markdown(f"""
         left: 50%; 
         transform: translateX(-50%);
         text-align: center; 
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.85);
         padding: 12px 25px; 
         border-radius: 50px; 
         backdrop-filter: blur(10px);
@@ -46,8 +45,8 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# The Canvas and Logic in a high-performance component
-components.html(f"""
+# High-performance Canvas Component with stylized globe
+components.html("""
 <html>
 <body style="margin: 0; padding: 0; overflow: hidden; background: #000;">
 <canvas id="universeCanvas" style="display: block;"></canvas>
@@ -55,75 +54,97 @@ components.html(f"""
 <script>
     const canvas = document.getElementById('universeCanvas');
     const ctx = canvas.getContext('2d');
-    let width, height;
-    let stars = [];
-    const earthImg = new Image();
-    let earthLoaded = false;
-    
-    earthImg.src = 'https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg';
-    earthImg.onload = () => {{ earthLoaded = true; }};
+    let width, height, stars = [];
+    let rotation = 0;
 
-    function resize() {{
+    function resize() {
         width = window.innerWidth;
         height = window.innerHeight;
         canvas.width = width;
         canvas.height = height;
         initStars();
-    }}
+    }
 
-    function initStars() {{
+    function initStars() {
         stars = [];
-        for (let i = 0; i < 400; i++) {{
-            stars.push({{
+        for (let i = 0; i < 300; i++) {
+            stars.push({
                 x: Math.random() * width,
                 y: Math.random() * height,
                 size: Math.random() * 1.5,
                 twinkle: Math.random() * 0.05
-            }});
-        }}
-    }}
+            });
+        }
+    }
 
     let orbitAngle = 0;
 
-    function draw() {{
-        ctx.fillStyle = '#01011a';
+    function drawGlobe(cx, cy, r) {
+        rotation += 0.01;
+        
+        // Globe Background (the blue depths)
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fillStyle = "#001a33";
+        ctx.fill();
+        
+        // Outer Ring Glow
+        ctx.strokeStyle = "rgba(0, 191, 255, 0.5)";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        ctx.restore();
+
+        // Draw Meridians (Vertical Curves)
+        ctx.strokeStyle = "rgba(0, 255, 255, 0.6)";
+        ctx.lineWidth = 1.5;
+        for (let i = 0; i < 4; i++) {
+            let shift = (rotation + (i * Math.PI / 2)) % Math.PI;
+            let curveWidth = Math.cos(shift) * r;
+            
+            ctx.beginPath();
+            ctx.ellipse(cx, cy, Math.abs(curveWidth), r, 0, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+
+        // Draw Parallels (Horizontal Lines)
+        for (let i = -2; i <= 2; i++) {
+            let h = (i * r) / 3;
+            let w = Math.sqrt(r * r - h * h);
+            ctx.beginPath();
+            ctx.moveTo(cx - w, cy + h);
+            ctx.lineTo(cx + w, cy + h);
+            ctx.stroke();
+        }
+        
+        // Circular Rim
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
+    function draw() {
+        // Deep Space Gradient
+        const skyGrad = ctx.createRadialGradient(width/2, height/2, 10, width/2, height/2, width);
+        skyGrad.addColorStop(0, "#01011a");
+        skyGrad.addColorStop(1, "#000000");
+        ctx.fillStyle = skyGrad;
         ctx.fillRect(0, 0, width, height);
 
         // Draw Stars
-        stars.forEach(s => {{
-            ctx.fillStyle = `rgba(255, 215, 0, ${{0.3 + Math.abs(Math.sin(Date.now() * s.twinkle))}})`;
+        stars.forEach(s => {
+            ctx.fillStyle = `rgba(255, 215, 0, ${0.3 + Math.abs(Math.sin(Date.now() * s.twinkle))})`;
             ctx.beginPath();
             ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
             ctx.fill();
-        }});
+        });
 
         const cx = width / 2;
         const cy = height / 2;
         const r = Math.min(width, height) * 0.15;
 
-        // Draw Earth
-        if (earthLoaded) {{
-            ctx.save();
-            ctx.beginPath();
-            ctx.arc(cx, cy, r, 0, Math.PI * 2);
-            ctx.clip(); // Keep rotation inside the sphere
-            ctx.translate(cx, cy);
-            ctx.rotate(Date.now() * 0.0001);
-            ctx.drawImage(earthImg, -r*1.5, -r, r*3, r*2);
-            ctx.restore();
-        }} else {{
-            ctx.fillStyle = '#1e3a5f';
-            ctx.beginPath();
-            ctx.arc(cx, cy, r, 0, Math.PI * 2);
-            ctx.fill();
-        }}
-
-        // Earth Atmosphere Glow
-        ctx.strokeStyle = 'rgba(255, 215, 0, 0.2)';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.arc(cx, cy, r + 5, 0, Math.PI * 2);
-        ctx.stroke();
+        // Draw the "Globe Emoji" Symbol
+        drawGlobe(cx, cy, r);
 
         // Orbiting Text
         orbitAngle += 0.005;
@@ -145,7 +166,7 @@ components.html(f"""
         ctx.fillText("⭐ your best choice of programmer solution ⭐", cx, cy + r + 60);
 
         requestAnimationFrame(draw);
-    }}
+    }
 
     window.addEventListener('resize', resize);
     resize();
