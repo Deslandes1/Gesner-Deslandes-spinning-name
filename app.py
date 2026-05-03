@@ -2,7 +2,7 @@ import streamlit as st
 
 # ---------- PAGE CONFIG ----------
 st.set_page_config(
-    page_title="Gesner Deslandes | Best Programmer Solution",
+    page_title="Gesner Deslandes | GlobalInternet.py",
     page_icon="⭐",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -11,8 +11,9 @@ st.set_page_config(
 # ---------- YOUR CONTACT INFO ----------
 PHONE = "(509)-47385663"
 EMAIL = "deslandes78@gmail.com"
+WEBSITE = "https://globalinternetsitepy-abh7v6tnmskxxnuplrdcgk.streamlit.app/"
 
-# ---------- FULL SCREEN SPINNING NAME + FALLING STARS ----------
+# ---------- FULL SCREEN SPINNING NAME + FALLING STARS + DESCRIPTION ----------
 st.markdown(f"""
 <style>
     /* Remove all default Streamlit padding/margins */
@@ -27,7 +28,7 @@ st.markdown(f"""
         height: 100vh;
         overflow: hidden;
     }}
-    /* Full-screen container that truly centers both axes */
+    /* Full-screen container for central content */
     .fullscreen {{
         position: fixed;
         top: 0;
@@ -36,13 +37,14 @@ st.markdown(f"""
         height: 100%;
         display: flex;
         flex-direction: column;
-        justify-content: center;   /* vertical centering */
-        align-items: center;       /* horizontal centering */
+        justify-content: center;
+        align-items: center;
         z-index: 10;
         text-align: center;
-        pointer-events: none;      /* so stars can fall over if needed, but buttons still clickable? we'll keep contact clickable separately */
+        pointer-events: none;
+        overflow-y: auto;  /* allow scrolling if content overflows (safe) */
     }}
-    /* Spinning name – perfectly centered block */
+    /* Spinning name – perfectly centered */
     .spinning-name {{
         font-size: 3.5rem;
         font-weight: bold;
@@ -55,13 +57,13 @@ st.markdown(f"""
         animation: spin 4s linear infinite;
         text-shadow: 0 0 20px rgba(255,215,0,0.6);
         white-space: nowrap;
-        margin: 0 auto;  /* extra horizontal centering */
+        margin: 0 auto;
     }}
     @keyframes spin {{
         0% {{ transform: rotate(0deg); }}
         100% {{ transform: rotate(360deg); }}
     }}
-    /* Tagline below the spinning name (still centered) */
+    /* Tagline below spinning name */
     .tagline {{
         font-size: 1.8rem;
         color: #FFD966;
@@ -74,7 +76,48 @@ st.markdown(f"""
         backdrop-filter: blur(4px);
         pointer-events: none;
     }}
-    /* Contact info fixed at bottom – all YELLOW, clickable */
+    /* Description card – new content */
+    .description-card {{
+        max-width: 800px;
+        margin-top: 2rem;
+        background: rgba(0,0,0,0.6);
+        backdrop-filter: blur(8px);
+        border-radius: 20px;
+        padding: 1.5rem;
+        text-align: left;
+        color: #f0f0f0;
+        font-family: 'Poppins', sans-serif;
+        pointer-events: auto;
+        border-left: 4px solid #FFD700;
+    }}
+    .description-card h3 {{
+        color: #FFD700;
+        margin-top: 0;
+        text-align: center;
+    }}
+    .description-card ul {{
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+    }}
+    .description-card li {{
+        margin: 0.5rem 0;
+    }}
+    .website-link {{
+        display: inline-block;
+        margin-top: 1rem;
+        background: #FFD700;
+        color: #0a0f2a;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 30px;
+        font-weight: bold;
+        transition: 0.2s;
+    }}
+    .website-link:hover {{
+        background: #FFB347;
+        transform: scale(1.02);
+    }}
+    /* Contact info fixed at bottom – yellow */
     .contact {{
         position: fixed;
         bottom: 2%;
@@ -88,11 +131,11 @@ st.markdown(f"""
         backdrop-filter: blur(5px);
         white-space: nowrap;
         z-index: 20;
-        color: #FFD700;  /* Yellow */
+        color: #FFD700;
         pointer-events: auto;
     }}
     .contact a {{
-        color: #FFD700;  /* Yellow for email link */
+        color: #FFD700;
         text-decoration: none;
         font-weight: bold;
     }}
@@ -119,20 +162,39 @@ st.markdown(f"""
         0% {{ transform: translateY(0) rotate(0deg); opacity: 1; }}
         100% {{ transform: translateY(100vh) rotate(360deg); opacity: 0; }}
     }}
-    /* Responsive: smaller font on mobile to fit name */
+    /* Responsive */
     @media (max-width: 768px) {{
         .spinning-name {{ font-size: 2.2rem; white-space: normal; }}
         .tagline {{ font-size: 1.2rem; }}
+        .description-card {{ margin: 1rem; padding: 1rem; }}
         .contact {{ font-size: 0.8rem; white-space: normal; width: 90%; }}
     }}
     @media (max-width: 480px) {{
         .spinning-name {{ font-size: 1.8rem; }}
+        .description-card {{ font-size: 0.9rem; }}
     }}
 </style>
 
 <div class="fullscreen">
     <div class="spinning-name">✨ Gesner Deslandes ✨</div>
     <div class="tagline">⭐ your best choice of programmer solution ⭐</div>
+
+    <!-- GlobalInternet.py description card -->
+    <div class="description-card">
+        <h3>🌍 GlobalInternet.py</h3>
+        <p><strong>Founded by Gesner Deslandes</strong> – owner, founder, and lead engineer.<br>
+        We build Python‑based software on demand for clients worldwide. Like Silicon Valley, but with a Haitian touch and outstanding outcomes.</p>
+        <ul>
+            <li>🧠 <strong>AI‑powered solutions</strong> – chatbots, data analysis, automation</li>
+            <li>🗳️ <strong>Complete election & voting systems</strong> – secure, multi‑language, real‑time</li>
+            <li>🌐 <strong>Web applications</strong> – dashboards, internal tools, online platforms</li>
+            <li>📦 <strong>Full package delivery</strong> – we email you the complete code and guide you through installation</li>
+        </ul>
+        <p>Whether you need a company website, a custom software tool, or a full‑scale online platform – we build it, you own it.</p>
+        <div style="text-align: center;">
+            <a href="{WEBSITE}" target="_blank" class="website-link">🔗 Visit our website →</a>
+        </div>
+    </div>
 </div>
 
 <div class="contact">
@@ -157,6 +219,6 @@ st.markdown(f"""
             star.remove();
         }}, duration * 1000);
     }}
-    setInterval(createStar, 250);
+    setInterval(createStar, 200);
 </script>
 """, unsafe_allow_html=True)
