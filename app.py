@@ -39,10 +39,11 @@ st.markdown(f"""
         justify-content: center;
         align-items: center;
         z-index: 10;
+        text-align: center;
     }}
-    /* Spinning name – large, centered, rotates */
+    /* Spinning name – adjusted size to fit full width */
     .spinning-name {{
-        font-size: 5rem;
+        font-size: 3.5rem;
         font-weight: bold;
         font-family: 'Poppins', 'Segoe UI', sans-serif;
         background: linear-gradient(135deg, #FFD700, #FFB347);
@@ -52,8 +53,9 @@ st.markdown(f"""
         display: inline-block;
         animation: spin 4s linear infinite;
         text-shadow: 0 0 20px rgba(255,215,0,0.6);
-        text-align: center;
         white-space: nowrap;
+        max-width: 90vw;
+        overflow-x: visible;
     }}
     @keyframes spin {{
         0% {{ transform: rotate(0deg); }}
@@ -71,7 +73,7 @@ st.markdown(f"""
         border-radius: 50px;
         backdrop-filter: blur(4px);
     }}
-    /* Contact info fixed at bottom */
+    /* Contact info fixed at bottom – all YELLOW */
     .contact {{
         position: fixed;
         bottom: 2%;
@@ -85,9 +87,10 @@ st.markdown(f"""
         backdrop-filter: blur(5px);
         white-space: nowrap;
         z-index: 20;
+        color: #FFD700;  /* Yellow */
     }}
     .contact a {{
-        color: #FFD700;
+        color: #FFD700;  /* Yellow for email link */
         text-decoration: none;
         font-weight: bold;
     }}
@@ -114,11 +117,14 @@ st.markdown(f"""
         0% {{ transform: translateY(0) rotate(0deg); opacity: 1; }}
         100% {{ transform: translateY(100vh) rotate(360deg); opacity: 0; }}
     }}
-    /* Responsive: smaller font on mobile */
+    /* Responsive: smaller font on mobile to fit name */
     @media (max-width: 768px) {{
-        .spinning-name {{ font-size: 2.8rem; white-space: normal; }}
+        .spinning-name {{ font-size: 2.2rem; white-space: normal; }}
         .tagline {{ font-size: 1.2rem; }}
         .contact {{ font-size: 0.8rem; white-space: normal; width: 90%; }}
+    }}
+    @media (max-width: 480px) {{
+        .spinning-name {{ font-size: 1.8rem; }}
     }}
 </style>
 
