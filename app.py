@@ -4,7 +4,7 @@ import streamlit as st
 st.set_page_config(
     page_title="Gesner Deslandes | Best Programmer Solution",
     page_icon="⭐",
-    layout="centered",
+    layout="wide",
     initial_sidebar_state="collapsed"
 )
 
@@ -12,68 +12,96 @@ st.set_page_config(
 PHONE = "(509)-47385663"
 EMAIL = "deslandes78@gmail.com"
 
-# ---------- CUSTOM HTML/CSS/JS FOR SPINNING TEXT & FALLING STARS ----------
+# ---------- CUSTOM CSS/JS FOR CIRCULAR MOVEMENT + FALLING STARS ----------
 st.markdown(f"""
 <style>
-    /* Full screen background (dark, makes stars and text pop) */
+    /* Remove default Streamlit padding/margins for full-screen effect */
+    .main .block-container {{
+        padding-top: 0rem;
+        padding-bottom: 0rem;
+        max-width: 100%;
+    }}
     .stApp {{
         background: linear-gradient(135deg, #0a0f2a, #0a1a3a);
-        color: white;
+        overflow: hidden;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
     }}
-    /* Container for the spinning name */
-    .spinner-container {{
+    /* Container that covers the whole screen */
+    .fullscreen-container {{
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
-        height: 60vh;
-        flex-direction: column;
     }}
-    /* Spinning text style */
-    .spinning-name {{
-        font-size: 4rem;
+    /* Moving name - circular path, always upright */
+    .moving-name {{
+        position: absolute;
+        font-size: 3.5rem;
         font-weight: bold;
         font-family: 'Poppins', 'Segoe UI', sans-serif;
         background: linear-gradient(135deg, #FFD700, #FFB347);
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
-        display: inline-block;
-        animation: spin 4s linear infinite;
-        text-shadow: 0 0 10px rgba(255,215,0,0.5);
-        margin-bottom: 1rem;
+        text-shadow: 0 0 15px rgba(255,215,0,0.6);
+        white-space: nowrap;
+        animation: circleMove 12s linear infinite;
+        z-index: 10;
     }}
-    @keyframes spin {{
-        0% {{ transform: rotate(0deg); }}
-        100% {{ transform: rotate(360deg); }}
+    @keyframes circleMove {{
+        0% {{ top: 10%; left: 10%; transform: translate(0, 0); }}
+        25% {{ top: 10%; left: 80%; transform: translate(0, 0); }}
+        50% {{ top: 80%; left: 80%; transform: translate(0, 0); }}
+        75% {{ top: 80%; left: 10%; transform: translate(0, 0); }}
+        100% {{ top: 10%; left: 10%; transform: translate(0, 0); }}
     }}
-    /* Tagline style */
+    /* Tagline below the moving name? Actually we show it fixed at bottom */
     .tagline {{
-        font-size: 1.5rem;
+        position: fixed;
+        bottom: 15%;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 1.8rem;
         color: #FFD966;
-        text-align: center;
-        letter-spacing: 1px;
         font-family: 'Poppins', sans-serif;
-        margin-top: 20px;
-        border-top: 2px solid gold;
-        padding-top: 20px;
-        display: inline-block;
-    }}
-    /* Contact info style */
-    .contact {{
-        margin-top: 3rem;
-        text-align: center;
-        font-size: 1.2rem;
         background: rgba(0,0,0,0.5);
-        padding: 1rem;
+        padding: 12px;
+        border-radius: 50px;
+        width: fit-content;
+        margin: 0 auto;
+        backdrop-filter: blur(5px);
+        z-index: 15;
+        pointer-events: none;
+    }}
+    /* Contact info fixed at bottom */
+    .contact {{
+        position: fixed;
+        bottom: 2%;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 1.1rem;
+        background: rgba(0,0,0,0.6);
+        padding: 0.8rem;
         border-radius: 30px;
         backdrop-filter: blur(5px);
+        width: 90%;
+        margin: 0 auto;
+        z-index: 15;
     }}
     .contact a {{
         color: #FFD700;
         text-decoration: none;
         font-weight: bold;
     }}
-    /* Fixed area for falling stars (canvas-like) */
+    /* Falling stars container */
     .star-container {{
         position: fixed;
         top: 0;
@@ -81,7 +109,7 @@ st.markdown(f"""
         width: 100%;
         height: 100%;
         pointer-events: none;
-        z-index: 999;
+        z-index: 5;
         overflow: hidden;
     }}
     .falling-star {{
@@ -98,41 +126,34 @@ st.markdown(f"""
     }}
 </style>
 
-<div class="spinner-container">
-    <div class="spinning-name">Gesner Deslandes</div>
+<div class="fullscreen-container">
+    <div class="moving-name">✨ Gesner Deslandes ✨</div>
     <div class="tagline">⭐ your best choice of programmer solution ⭐</div>
-</div>
-
-<div class="contact">
-    📞 <strong>Phone:</strong> {PHONE} &nbsp;&nbsp;|&nbsp;&nbsp;
-    ✉️ <strong>Email:</strong> <a href="mailto:{EMAIL}">{EMAIL}</a>
+    <div class="contact">
+        📞 <strong>Phone:</strong> {PHONE} &nbsp;&nbsp;|&nbsp;&nbsp;
+        ✉️ <strong>Email:</strong> <a href="mailto:{EMAIL}">{EMAIL}</a>
+    </div>
 </div>
 
 <div id="starField" class="star-container"></div>
 
 <script>
-    // Function to create a falling star
     function createStar() {{
         const star = document.createElement('div');
         star.innerHTML = '⭐';
         star.classList.add('falling-star');
         const leftPos = Math.random() * window.innerWidth;
-        const duration = 2 + Math.random() * 3; // 2 to 5 seconds
+        const duration = 2 + Math.random() * 3;
         star.style.left = leftPos + 'px';
         star.style.fontSize = (0.8 + Math.random() * 1.5) + 'rem';
         star.style.animationDuration = duration + 's';
         document.getElementById('starField').appendChild(star);
-        // Remove star after animation ends
         setTimeout(() => {{
             star.remove();
         }}, duration * 1000);
     }}
-
-    // Drop stars constantly (every 300ms)
-    setInterval(createStar, 300);
+    setInterval(createStar, 200);
 </script>
 """, unsafe_allow_html=True)
 
-# Optional footer note
-st.markdown("---")
-st.caption("✨ Built with Streamlit • Deployed on Streamlit Cloud • Stars keep falling ✨")
+# No extra Streamlit elements needed – everything is in custom HTML
