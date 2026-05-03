@@ -27,7 +27,7 @@ st.markdown(f"""
         height: 100vh;
         overflow: hidden;
     }}
-    /* Full-screen flex container */
+    /* Full-screen container that truly centers both axes */
     .fullscreen {{
         position: fixed;
         top: 0;
@@ -36,12 +36,13 @@ st.markdown(f"""
         height: 100%;
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
+        justify-content: center;   /* vertical centering */
+        align-items: center;       /* horizontal centering */
         z-index: 10;
         text-align: center;
+        pointer-events: none;      /* so stars can fall over if needed, but buttons still clickable? we'll keep contact clickable separately */
     }}
-    /* Spinning name – adjusted size to fit full width */
+    /* Spinning name – perfectly centered block */
     .spinning-name {{
         font-size: 3.5rem;
         font-weight: bold;
@@ -54,14 +55,13 @@ st.markdown(f"""
         animation: spin 4s linear infinite;
         text-shadow: 0 0 20px rgba(255,215,0,0.6);
         white-space: nowrap;
-        max-width: 90vw;
-        overflow-x: visible;
+        margin: 0 auto;  /* extra horizontal centering */
     }}
     @keyframes spin {{
         0% {{ transform: rotate(0deg); }}
         100% {{ transform: rotate(360deg); }}
     }}
-    /* Tagline below the spinning name */
+    /* Tagline below the spinning name (still centered) */
     .tagline {{
         font-size: 1.8rem;
         color: #FFD966;
@@ -72,8 +72,9 @@ st.markdown(f"""
         padding: 0.5rem 1.5rem;
         border-radius: 50px;
         backdrop-filter: blur(4px);
+        pointer-events: none;
     }}
-    /* Contact info fixed at bottom – all YELLOW */
+    /* Contact info fixed at bottom – all YELLOW, clickable */
     .contact {{
         position: fixed;
         bottom: 2%;
@@ -88,6 +89,7 @@ st.markdown(f"""
         white-space: nowrap;
         z-index: 20;
         color: #FFD700;  /* Yellow */
+        pointer-events: auto;
     }}
     .contact a {{
         color: #FFD700;  /* Yellow for email link */
